@@ -41,6 +41,7 @@ void extint31_handler()
 	if(msg_cmd_needs_trigger()) {
 		mpu_disable();
 		a8_m3_low_power_sync(CMD_STAT_WAIT4OK);
+		nvic_enable_irq(AM335X_IRQ_MBINT0);
 		return;
 	} else {
 		/* For Rev and S/M reset */
