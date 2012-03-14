@@ -57,9 +57,6 @@ void a8_lp_cmd1_handler(struct cmd_data *data, char use_default_val)
 	/* Disable the clock domains except MPU */
 	clkdm_sleep();
 
-	/* Disable A8 clock now */
-	mpu_disable();
-
 	/* Disable MPU clock domain */
 	mpu_clkdm_sleep();
 
@@ -149,8 +146,6 @@ void a8_lp_cmd3_handler(struct cmd_data *data, char use_default_val)
 
 	interconnect_modules_disable();
 
-	mpu_disable();
-
 	mpu_clkdm_sleep();
 
 	clkdm_sleep();
@@ -203,8 +198,6 @@ void a8_lp_cmd5_handler(struct cmd_data *data, char use_default_val)
 	/* PER power domain state change */
 	pd_state_change(per_st, PD_PER);
 
-	mpu_disable();
-
 	mpu_clkdm_sleep();
 
 	wkup_clkdm_sleep();
@@ -252,8 +245,6 @@ void a8_lp_cmd7_handler(struct cmd_data *data, char use_default_val)
 
 	/* PER power domain state change */
 	pd_state_change(per_st, PD_PER);
-
-	mpu_disable();
 
 	wkup_clkdm_sleep();
 
