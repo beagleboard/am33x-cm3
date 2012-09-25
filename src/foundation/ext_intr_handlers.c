@@ -45,6 +45,9 @@ void extint31_handler()
 	} else {
 		/* For Rev and S/M reset */
 		msg_cmd_dispatcher();
+		/* XXX: Analysis of why this is needed is TBD */
+		nvic_enable_irq(AM335X_IRQ_MBINT0);
+		return;
 	}
 }
 

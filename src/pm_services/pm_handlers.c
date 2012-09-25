@@ -261,7 +261,7 @@ void a8_standalone_handler(struct cmd_data *data)
 }
 
 /* All wake interrupts invoke this function */
-void generic_wake_handler()
+void generic_wake_handler(int wakeup_reason)
 {
 	int i = 0;
 
