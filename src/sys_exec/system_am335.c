@@ -17,18 +17,19 @@
 
 /* uint32_t system_core_clock; */
 
-void system_init()
+void system_init(void)
 {
 	/* Disable SysTick */
-	/* Note: AM335 has the calibration value
+
+	/*
+	 * Note: AM335 has the calibration value
 	 * and hence that is a better option (if used)
 	 * SysTick->CTRL = 0;
 	 */
 }
 
-
 /* Update the clock source/frequency if we know what to do based on OPP */
-void system_core_clock_update()
+void system_core_clock_update(void)
 {
 
 }
@@ -36,7 +37,8 @@ void system_core_clock_update()
 /* systick interrupt handler */
 void systick_handler(void)
 {
-	/* We don't necessarily need timer based delays in the firmware
+	/*
+	 * We don't necessarily need timer based delays in the firmware
 	 * If needed in the future, the way we could do this is
 	 * 1. Initialise a global timer_count variable
 	 * 2. Switch to the 10ms mode in SysTick module and use calibration value

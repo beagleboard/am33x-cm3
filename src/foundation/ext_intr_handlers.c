@@ -17,7 +17,10 @@
 #include <low_power.h>
 #include <system_am335.h>
 
-/* PRCM_M3_IRQ1: Triggered for events like PLL needs recalibration, domain transition completed */
+/*
+ * PRCM_M3_IRQ1: Triggered for events like PLL needs recalibration,
+ * domain transition completed
+ */
 void extint16_handler()
 {
 	while(1)
@@ -29,16 +32,18 @@ void extint31_handler()
 {
 	nvic_disable_irq(AM335X_IRQ_MBINT0);
 
-	/* If command is not valid, need to update the status to FAIL
-	 * and enable the mailbox interrupt back */
-	if(!msg_cmd_is_valid()) {
+	/*
+	 * If command is not valid, need to update the status to FAIL
+	 * and enable the mailbox interrupt back
+	 */
+	if (!msg_cmd_is_valid()) {
 		msg_cmd_stat_update(CMD_STAT_FAIL);
 		nvic_enable_irq(AM335X_IRQ_MBINT0);
 		return;
 	}
 
 	/* cmd was valid */
-	if(msg_cmd_needs_trigger()) {
+	if (msg_cmd_needs_trigger()) {
 		a8_m3_low_power_sync(CMD_STAT_WAIT4OK);
 		nvic_enable_irq(AM335X_IRQ_MBINT0);
 		return;
@@ -64,7 +69,7 @@ void extint34_handler()
 	int i = 0;
 
 	/* Flush out ALL the NVIC interrupts */
-	for(i=0; i<AM335X_NUM_EXT_INTERRUPTS; i++)
+	for (i=0; i<AM335X_NUM_EXT_INTERRUPTS; i++)
 	{
 		nvic_disable_irq(i);
 		nvic_clear_irq(i);

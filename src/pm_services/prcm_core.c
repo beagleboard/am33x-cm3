@@ -90,7 +90,7 @@ struct deep_sleep_data ds2_data =  {
 };
 
 /* Clear out the global variables here */
-void pm_init()
+void pm_init(void)
 {
 	cmd_id 			= 0;
 	cmd_stat 		= 0;
@@ -129,7 +129,7 @@ static void _module_enable(int reg)
 {
 	__raw_writel(MODULE_ENABLE, reg);
 
-	while((__raw_readl(reg) & DEFAULT_IDLEST_MASK)>>DEFAULT_IDLEST_SHIFT !=
+	while ((__raw_readl(reg) & DEFAULT_IDLEST_MASK)>>DEFAULT_IDLEST_SHIFT !=
 		DEFAULT_IDLEST_ACTIVE_VAL);
 }
 
@@ -143,14 +143,10 @@ static void _module_disable(int reg)
 
 int module_state_change(int state, int reg)
 {
-	if(state == MODULE_DISABLE) {
-		/* Any custom handling goes here */
+	if (state == MODULE_DISABLE)
 		_module_disable(reg);
-	}
-	else if(state == MODULE_ENABLE) {
-		/* Any custom handling goes here */
+	else
 		_module_enable(reg);
-	}
 
 	return 0;
 }
@@ -183,94 +179,20 @@ static void _clkdm_wakeup(int reg)
 
 int clkdm_state_change(int state, int reg)
 {
-	if(state == CLKDM_SLEEP) {
-		/* Any custom handling goes here */
+	if (state == CLKDM_SLEEP)
 		_clkdm_sleep(reg);
-	}
-	else if (state == CLKDM_WAKE) {
+	else
 		_clkdm_wakeup(reg);
-	}
-	return 0;
-}
-
-/* Is Debugss to be kept enabled?
- * returns
- *	1 if true
- * 	0 if false
- */
-int debugss_keep_enabled()
-{
-	return 0;
-}
-
-/* IP related */
-/* XXX: Meant only for debugging purposes */
-int misc_modules_disable()
-{
-	/* Blindly disable all the modules in the system */
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_CPGMAC0_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_LCDC_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_USB0_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_TPTC0_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_EMIF_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_OCMCRAM_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_GPMC_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_MCASP0_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_UART5_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_MMC0_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_ELM_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_I2C2_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_I2C1_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_SPI0_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_SPI1_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_MCASP1_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_UART1_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_UART2_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_UART3_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_UART4_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_TIMER7_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_TIMER2_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_TIMER3_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_TIMER4_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_RNG_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_AES0_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_SHA0_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_PKA_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_GPIO1_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_GPIO2_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_GPIO3_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_TPCC_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_DCAN0_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_DCAN1_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_EPWMSS1_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_EMIF_FW_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_EPWMSS0_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_OCPWP_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_EPWMSS2_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_IEEE5000_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_ICSS_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_TIMER5_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_TIMER6_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_MMC1_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_MMC2_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_TPTC1_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_TPTC2_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_SPINLOCK_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_MAILBOX0_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_MSTR_EXPS_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_SLV_EXPS_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_CEFUSE_CEFUSE_CLKCTRL);
-	module_state_change(MODULE_DISABLE, AM335X_CM_PER_CLKDIV32K_CLKCTRL);
-	/* Graphics related modules to be handled in A8 code */
 
 	return 0;
 }
 
-/* Looks like we'll have to ensure that we disable some modules when going down
+/*
+ * Looks like we'll have to ensure that we disable some modules when going down
  * ideally this list should have 0 entries but we need to check
  * what are the things that are really really necessary here
  */
-int essential_modules_disable()
+int essential_modules_disable(void)
 {
 	/* Disable only the bare essential modules */
 	module_state_change(MODULE_DISABLE, AM335X_CM_PER_CLKDIV32K_CLKCTRL);
@@ -286,7 +208,7 @@ int essential_modules_disable()
 	return 0;
 }
 
-int essential_modules_enable()
+int essential_modules_enable(void)
 {
 	/* Enable only the bare essential modules */
 	module_state_change(MODULE_ENABLE, AM335X_CM_PER_CLKDIV32K_CLKCTRL);
@@ -302,50 +224,46 @@ int essential_modules_enable()
 	return 0;
 }
 
-int interconnect_modules_disable()
+int interconnect_modules_disable(void)
 {
-	if(!debugss_keep_enabled()) {
-		module_state_change(MODULE_DISABLE, AM335X_CM_PER_EMIF_CLKCTRL);
-		module_state_change(MODULE_DISABLE, AM335X_CM_PER_EMIF_FW_CLKCTRL);
+	module_state_change(MODULE_DISABLE, AM335X_CM_PER_EMIF_CLKCTRL);
+	module_state_change(MODULE_DISABLE, AM335X_CM_PER_EMIF_FW_CLKCTRL);
 
-		module_state_change(MODULE_DISABLE, AM335X_CM_PER_L4LS_CLKCTRL);
-		module_state_change(MODULE_DISABLE, AM335X_CM_PER_L4HS_CLKCTRL);
-		module_state_change(MODULE_DISABLE, AM335X_CM_PER_L4FW_CLKCTRL);
-		module_state_change(MODULE_DISABLE, AM335X_CM_PER_L3_INSTR_CLKCTRL);
-		module_state_change(MODULE_DISABLE, AM335X_CM_PER_L3_CLKCTRL);
-	}
+	module_state_change(MODULE_DISABLE, AM335X_CM_PER_L4LS_CLKCTRL);
+	module_state_change(MODULE_DISABLE, AM335X_CM_PER_L4HS_CLKCTRL);
+	module_state_change(MODULE_DISABLE, AM335X_CM_PER_L4FW_CLKCTRL);
+	module_state_change(MODULE_DISABLE, AM335X_CM_PER_L3_INSTR_CLKCTRL);
+	module_state_change(MODULE_DISABLE, AM335X_CM_PER_L3_CLKCTRL);
 
 	return 0;
 }
 
-int interconnect_modules_enable()
+int interconnect_modules_enable(void)
 {
-	if(!debugss_keep_enabled()) {
-		module_state_change(MODULE_ENABLE, AM335X_CM_PER_L3_CLKCTRL);
-		module_state_change(MODULE_ENABLE, AM335X_CM_PER_L3_INSTR_CLKCTRL);
-		module_state_change(MODULE_ENABLE, AM335X_CM_PER_L4FW_CLKCTRL);
-		module_state_change(MODULE_ENABLE, AM335X_CM_PER_L4HS_CLKCTRL);
-		module_state_change(MODULE_ENABLE, AM335X_CM_PER_L4LS_CLKCTRL);
+	module_state_change(MODULE_ENABLE, AM335X_CM_PER_L3_CLKCTRL);
+	module_state_change(MODULE_ENABLE, AM335X_CM_PER_L3_INSTR_CLKCTRL);
+	module_state_change(MODULE_ENABLE, AM335X_CM_PER_L4FW_CLKCTRL);
+	module_state_change(MODULE_ENABLE, AM335X_CM_PER_L4HS_CLKCTRL);
+	module_state_change(MODULE_ENABLE, AM335X_CM_PER_L4LS_CLKCTRL);
 
-		module_state_change(MODULE_ENABLE, AM335X_CM_PER_EMIF_FW_CLKCTRL);
-		module_state_change(MODULE_ENABLE, AM335X_CM_PER_EMIF_CLKCTRL);
-	}
+	module_state_change(MODULE_ENABLE, AM335X_CM_PER_EMIF_FW_CLKCTRL);
+	module_state_change(MODULE_ENABLE, AM335X_CM_PER_EMIF_CLKCTRL);
 
 	return 0;
 }
 
-void mpu_disable()
+void mpu_disable(void)
 {
 	module_state_change(MODULE_DISABLE, AM335X_CM_MPU_MPU_CLKCTRL);
 }
 
-void mpu_enable()
+void mpu_enable(void)
 {
 	module_state_change(MODULE_ENABLE, AM335X_CM_MPU_MPU_CLKCTRL);
 }
 
 /* CLKDM related */
-void clkdm_sleep()
+void clkdm_sleep(void)
 {
 	clkdm_state_change(CLKDM_SLEEP, AM335X_CM_PER_OCPWP_L3_CLKSTCTRL);
 	clkdm_state_change(CLKDM_SLEEP, AM335X_CM_PER_ICSS_CLKSTCTRL);
@@ -359,7 +277,7 @@ void clkdm_sleep()
 	clkdm_state_change(CLKDM_SLEEP, AM335X_CM_PER_L3_CLKSTCTRL);
 }
 
-void clkdm_wake()
+void clkdm_wake(void)
 {
 	clkdm_state_change(CLKDM_WAKE, AM335X_CM_PER_L3_CLKSTCTRL);
 	clkdm_state_change(CLKDM_WAKE, AM335X_CM_PER_L3S_CLKSTCTRL);
@@ -373,22 +291,22 @@ void clkdm_wake()
 	clkdm_state_change(CLKDM_WAKE, AM335X_CM_PER_OCPWP_L3_CLKSTCTRL);
 }
 
-void mpu_clkdm_sleep()
+void mpu_clkdm_sleep(void)
 {
 	clkdm_state_change(CLKDM_SLEEP, AM335X_CM_MPU_CLKSTCTRL);
 }
 
-void mpu_clkdm_wake()
+void mpu_clkdm_wake(void)
 {
 	clkdm_state_change(CLKDM_WAKE, AM335X_CM_MPU_CLKSTCTRL);
 }
 
-void wkup_clkdm_sleep()
+void wkup_clkdm_sleep(void)
 {
 	clkdm_state_change(CLKDM_SLEEP, AM335X_CM_WKUP_CLKSTCTRL);
 }
 
-void wkup_clkdm_wake()
+void wkup_clkdm_wake(void)
 {
 	clkdm_state_change(CLKDM_WAKE, AM335X_CM_WKUP_CLKSTCTRL);
 }
@@ -400,12 +318,12 @@ int pd_state_change(int val, int pd)
 		pd_mpu_stctrl_next_val	= val;
 		pd_mpu_pwrstst_prev_val = __raw_readl(AM335X_PM_MPU_PWRSTST);
 		__raw_writel(val, AM335X_PM_MPU_PWRSTCTRL);
-	}
-	else if(pd == PD_PER) {
+	} else if (pd == PD_PER) {
 		pd_per_stctrl_next_val = val;
 		pd_per_pwrstst_prev_val = __raw_readl(AM335X_PM_PER_PWRSTST);
 		__raw_writel(val, AM335X_PM_PER_PWRSTCTRL);
 	}
+
 	return 0;
 }
 
@@ -507,7 +425,7 @@ static int _next_pd_per_stctrl_val(state)
 {
 	int v = 0;
 
-	if(state == 0) {
+	if (state == 0) {
 		v = per_powerst_change(ds0_data.pd_per_state, v);
 		v = icss_mem_ret_state_change(ds0_data.pd_per_icss_mem_ret_state, v);
 		v = per_mem_ret_state_change(ds0_data.pd_per_mem_ret_state, v);
@@ -539,7 +457,7 @@ static int _next_pd_mpu_stctrl_val(state)
 {
 	int v = 0;
 
-	if(state == 0) {
+	if (state == 0) {
 		v = mpu_powerst_change(ds0_data.pd_mpu_state, v);
 		v = mpu_ram_ret_state_change(ds0_data.pd_mpu_ram_ret_state, v);
 		v = mpu_l1_ret_state_change(ds0_data.pd_mpu_l1_ret_state, v);
@@ -566,7 +484,7 @@ int get_pd_mpu_stctrl_val(int state)
 }
 
 /* DeepSleep related */
-int disable_master_oscillator()
+int disable_master_oscillator(void)
 {
 	int v = __raw_readl(DEEPSLEEP_CTRL);
 
@@ -595,7 +513,6 @@ void configure_deepsleep_count(int ds_count)
 	v = var_mod(v, DS_COUNT_MASK, (ds_count << DS_COUNT_SHIFT));
 
 	__raw_writel(v, DEEPSLEEP_CTRL);
-
 }
 
 /* 1ms timer */
@@ -702,65 +619,57 @@ static int check_wdt(int base)
 void enable_wake_sources_for_ds2()
 {
 	/* Enable wakeup interrupts from required wake sources */
-	if(BB_USB_WAKE) {
+	if (BB_USB_WAKE)
 		module_state_change(MODULE_ENABLE, AM335X_CM_PER_USB0_CLKCTRL);
-	}
 
-	if(BB_I2C0_WAKE) {
+	if (BB_I2C0_WAKE)
 		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_I2C0_CLKCTRL);
-	}
 
-	if(BB_ADTSC_WAKE) {
+	if (BB_ADTSC_WAKE)
 		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_ADC_TSC_CLKCTRL);
-	}
 
-	if(BB_UART0_WAKE) {
+	if(BB_UART0_WAKE)
 		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_UART0_CLKCTRL);
-	}
 
-	if(BB_GPIO0_WAKE0) {
+	if(BB_GPIO0_WAKE0)
 		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_GPIO0_CLKCTRL);
-	}
 
-	if(BB_GPIO0_WAKE1) {
+	if(BB_GPIO0_WAKE1)
 		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_GPIO0_CLKCTRL);
-	}
 
-	if(BB_RTC_ALARM_WAKE) {
+	if(BB_RTC_ALARM_WAKE)
 		module_state_change(MODULE_ENABLE, AM335X_CM_RTC_RTC_CLKCTRL);
-	}
 
-	if(BB_TIMER1_WAKE) {
+	if(BB_TIMER1_WAKE)
 		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_TIMER1_CLKCTRL);
-	}
 
-	if(BB_WDT1_WAKE) {
+	if(BB_WDT1_WAKE)
 		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_WDT1_CLKCTRL);
-	}
-
 }
 
-/* A8 is expected to have left the module in a state where it will
- * cause a wakeup event
- * Ideally, this function should just enable the NVIC interrupt
+/*
+ * A8 is expected to have left the module in a state where it will
+ * cause a wakeup event. Ideally, this function should just enable
+ * the NVIC interrupt
  */
 void configure_wake_sources(int wake_sources, int mod_check)
 {
 	int v = 0;
 
-	if(wake_sources != 0 || (mod_check == 0))
+	if (wake_sources != 0 || (mod_check == 0))
 		cmd_wake_sources = wake_sources;
 	else
 		cmd_wake_sources = WAKE_ALL;
 
-	/* This flag is for checking the SYSCONFIG of the module
+	/*
+	 * This flag is for checking the SYSCONFIG of the module
 	 * and then gating the clock. The clock needs to be gated
 	 * for the module to generate swake
 	 */
 	mod_check = 0;
 
 	/* Enable wakeup interrupts from required wake sources */
-	if(BB_USB_WAKE) {
+	if (BB_USB_WAKE) {
 		/* A8 driver needs to configure SYSCONFIG. No M3 access */
 		module_state_change(MODULE_DISABLE, AM335X_CM_PER_USB0_CLKCTRL);
 		nvic_enable_irq(AM335X_IRQ_USBWAKEUP);
@@ -868,9 +777,10 @@ void configure_wake_sources(int wake_sources, int mod_check)
 		nvic_enable_irq(AM335X_IRQ_USB1WOUT);
 }
 
-void clear_wake_sources()
+void clear_wake_sources(void)
 {
-	/* Clear the global variable
+	/*
+	 * Clear the global variable
 	 * and then disable all wake interrupts
 	 */
 
@@ -894,17 +804,16 @@ void clear_wake_sources()
 	nvic_disable_irq(AM335X_IRQ_USB1WOUT);
 
 	/* TODO: Clear all the pending interrupts */
-
 }
 
-void pd_state_restore()
+void pd_state_restore(void)
 {
 	__raw_writel(pd_per_stctrl_prev_val, AM335X_PM_PER_PWRSTCTRL);
 	__raw_writel(pd_mpu_stctrl_prev_val, AM335X_PM_MPU_PWRSTCTRL);
 }
 
 /* Checking only the stst bits for now */
-int verify_pd_transitions()
+int verify_pd_transitions(void)
 {
 	int mpu_ctrl, mpu_stst, per_ctrl, per_stst;
 
@@ -914,7 +823,7 @@ int verify_pd_transitions()
 	mpu_stst = __raw_readl(AM335X_PM_MPU_PWRSTST);
 	per_stst = __raw_readl(AM335X_PM_PER_PWRSTST);
 
-	if(((mpu_ctrl & 0x3) == (mpu_stst & 0x3)) &&
+	if (((mpu_ctrl & 0x3) == (mpu_stst & 0x3)) &&
 		((per_ctrl & 0x3) == (per_stst & 0x3)))
 		return CMD_STAT_PASS;
 	else

@@ -17,14 +17,7 @@
 #include <low_power.h>
 #include <system_am335.h>
 
-#define DEBUG	0
-
-extern void wkup_clkdm_sleep();
-extern void wkup_clkdm_wake();
-extern void pd_state_restore();
-
 /* Enter RTC mode */
-/* Initiates a clean shutdown */
 void a8_lp_cmd1_handler(struct cmd_data *data, char use_default_val)
 {
 	struct rtc_data *local_cmd = (struct rtc_data *)data->data;
@@ -33,7 +26,7 @@ void a8_lp_cmd1_handler(struct cmd_data *data, char use_default_val)
 	/* If RTC module if not already configured... cannot continue */
 	rtc_enable_check();
 
-	if(local_cmd->rtc_timeout_val != 0 &&
+	if (local_cmd->rtc_timeout_val != 0 &&
 			local_cmd->rtc_timeout_val <= RTC_TIMEOUT_MAX)
 		timeout = local_cmd->rtc_timeout_val;
 	else
@@ -45,11 +38,6 @@ void a8_lp_cmd1_handler(struct cmd_data *data, char use_default_val)
 	timeout += rtc_reg_read(RTC_ALARM2_SECONDS_REG);
 
 	rtc_reg_write(RTC_ALARM2_SECONDS_REG, timeout);
-
-	/* Disable all the modules - Debug mode only */
-	if(DEBUG) {
-		misc_modules_disable();
-	}
 
 	/* Turn off interconnect */
 	interconnect_modules_disable();
@@ -66,13 +54,12 @@ void a8_lp_cmd1_handler(struct cmd_data *data, char use_default_val)
 }
 
 /* Enter RTC_fast mode */
-/* Probably this can be a common function for RTC and RTC_fast */
 void a8_lp_cmd2_handler(struct cmd_data *data, char use_default_val)
 {
 	struct rtc_data *rtc_data = (struct rtc_data *)data->data;
 	int timeout = 0;
 
-	if(!rtc_data->rtc_timeout_val &&
+	if (!rtc_data->rtc_timeout_val &&
 		(rtc_data->rtc_timeout_val < RTC_TIMEOUT_MAX))
 		timeout = rtc_data->rtc_timeout_val;
 	else
@@ -91,7 +78,8 @@ void a8_lp_cmd2_handler(struct cmd_data *data, char use_default_val)
 	__raw_writel(timeout, RTC_ALARM2_SECONDS_REG);
 }
 
-/* Enter DeepSleep0 mode
+/*
+ * Enter DeepSleep0 mode
  * MOSC = OFF
  * PD_PER = RET
  * PD_MPU = RET
@@ -104,9 +92,8 @@ void a8_lp_cmd3_handler(struct cmd_data *data, char use_default_val)
 	int mpu_st = 0;
 
 	/* Disable MOSC if defaults are required or if user asked for it */
-	if(use_default_val || !(local_cmd->mosc_state)) {
+	if (use_default_val || !(local_cmd->mosc_state))
 		disable_master_oscillator();
-	}
 
 	configure_wake_sources(local_cmd->wake_sources, use_default_val);
 
@@ -136,11 +123,6 @@ void a8_lp_cmd3_handler(struct cmd_data *data, char use_default_val)
 	/* PER power domain state change */
 	pd_state_change(per_st, PD_PER);
 
-	/* Disable all the modules - Debug mode only */
-	if(DEBUG) {
-		misc_modules_disable();
-	}
-
 	/* XXX: New addition to resolve any issues that A8 might have */
 	essential_modules_disable();
 
@@ -155,7 +137,8 @@ void a8_lp_cmd3_handler(struct cmd_data *data, char use_default_val)
 	/* TODO: wait for power domain state change interrupt from PRCM */
 }
 
-/* Enter DeepSleep1 mode
+/*
+ * Enter DeepSleep1 mode
  * MOSC = OFF
  * PD_PER = ON
  * PD_MPU = RET
@@ -168,14 +151,13 @@ void a8_lp_cmd5_handler(struct cmd_data *data, char use_default_val)
 	int mpu_st = 0;
 
 	/* Disable MOSC if possible */
-	if(use_default_val || !(local_cmd->mosc_state)) {
+	if (use_default_val || !(local_cmd->mosc_state))
 		disable_master_oscillator();
-	}
 
 	configure_wake_sources(local_cmd->wake_sources, use_default_val);
 
 	/* TODO: Check for valid range */
-	if(!(use_default_val) && (local_cmd->deepsleep_count))
+	if (!(use_default_val) && (local_cmd->deepsleep_count))
 		configure_deepsleep_count(local_cmd->deepsleep_count);
 	else
 		configure_deepsleep_count(DS_COUNT_DEFAULT);
@@ -205,7 +187,8 @@ void a8_lp_cmd5_handler(struct cmd_data *data, char use_default_val)
 	/* TODO: wait for power domain state change interrupt from PRCM */
 }
 
-/* Enter DeepSleep2 mode
+/*
+ * Enter DeepSleep2 mode
  * MOSC = OFF
  * PD_PER = ON
  * PD_MPU = ON
@@ -218,14 +201,13 @@ void a8_lp_cmd7_handler(struct cmd_data *data, char use_default_val)
 	int mpu_st = 0;
 
 	/* Disable MOSC if possible */
-	if(use_default_val || !(local_cmd->mosc_state)) {
+	if (use_default_val || !(local_cmd->mosc_state))
 		disable_master_oscillator();
-	}
 
 	configure_wake_sources(local_cmd->wake_sources, use_default_val);
 
 	/* TODO: Check for valid range */
-	if(!(use_default_val) && (local_cmd->deepsleep_count))
+	if (!(use_default_val) && (local_cmd->deepsleep_count))
 		configure_deepsleep_count(local_cmd->deepsleep_count);
 	else
 		configure_deepsleep_count(DS_COUNT_DEFAULT);
@@ -255,9 +237,6 @@ void a8_lp_cmd7_handler(struct cmd_data *data, char use_default_val)
 void a8_standalone_handler(struct cmd_data *data)
 {
 	/* TBD */
-#if 0
-	return app_handler((void *)load_addr, );
-#endif
 }
 
 /* All wake interrupts invoke this function */
@@ -265,8 +244,8 @@ void generic_wake_handler(int wakeup_reason)
 {
 	int i = 0;
 
-	/* Right now assuming that the cmd_id is a valid reflection of what we did
-	 * But this should read the trace vector to find out where we are
+	/*
+	 * Assuming that cmd_id is a valid reflection of what we did
 	 */
 	switch(cmd_global_data.cmd_id) {
 	case 0x1:
@@ -294,8 +273,7 @@ void generic_wake_handler(int wakeup_reason)
 
 	/* If everything is done, we init things again */
 	/* Flush out NVIC interrupts */
-	for(i=0; i<AM335X_NUM_EXT_INTERRUPTS; i++)
-	{
+	for (i=0; i<AM335X_NUM_EXT_INTERRUPTS; i++) {
 		nvic_disable_irq(i);
 		nvic_clear_irq(i);
 	}
@@ -314,23 +292,24 @@ void generic_wake_handler(int wakeup_reason)
 }
 
 /* Exit RTC mode */
-void a8_wake_cmd1_handler()
+void a8_wake_cmd1_handler(void)
 {
 	/* RTC wake is a cold boot... so this doesn't make sense */
 }
 
 /* Exit RTC_fast mode */
-void a8_wake_cmd2_handler()
+void a8_wake_cmd2_handler(void)
 {
 	/* RTC fast wake is also similar to cold boot... */
 }
 
-/* Exit DeepSleep0 mode
+/*
+ * Exit DeepSleep0 mode
  * MOSC = OFF
  * PD_PER = RET
  * PD_MPU = RET
  */
-void a8_wake_cmd3_handler()
+void a8_wake_cmd3_handler(void)
 {
 	int result = 0;
 
@@ -353,12 +332,13 @@ void a8_wake_cmd3_handler()
 	mpu_clkdm_wake();
 }
 
-/* Exit DeepSleep1 mode
+/*
+ * Exit DeepSleep1 mode
  * MOSC = OFF
  * PD_PER = ON
  * PD_MPU = RET
  */
-void a8_wake_cmd5_handler()
+void a8_wake_cmd5_handler(void)
 {
 	int result = 0;
 
@@ -377,12 +357,13 @@ void a8_wake_cmd5_handler()
 	mpu_clkdm_wake();
 }
 
-/* Exit DeepSleep2 mode
+/*
+ * Exit DeepSleep2 mode
  * MOSC = OFF
  * PD_PER = ON
  * PD_MPU = ON
  */
-void a8_wake_cmd7_handler()
+void a8_wake_cmd7_handler(void)
 {
 	int result = 0;
 

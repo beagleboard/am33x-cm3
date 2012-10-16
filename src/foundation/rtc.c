@@ -19,7 +19,7 @@
 
 int rtc_enable_check()
 {
-	if(__raw_readl(AM335X_CM_RTC_CLKSTCTRL == 0x2))
+	if (__raw_readl(AM335X_CM_RTC_CLKSTCTRL == 0x2))
 		return 0;
 	else
 		while(1)

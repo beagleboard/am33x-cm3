@@ -28,7 +28,7 @@ short valid_cmd_id[] = {
 };
 
 /* Clear out the IPC regs */
-void msg_init()
+void msg_init(void)
 {
 	/* TODO: Global data related to msg also? */
 	a8_m3_data_r.reg1 = 0;
@@ -54,11 +54,8 @@ void msg_init()
 }
 
 /* Read all the IPC registers in one-shot */
-void msg_read_all()
+void msg_read_all(void)
 {
-	/* TODO: Use a global variable as a lock
-	 * to avoid reading the regs again before processing
-	 */
 	a8_m3_data_r.reg1 = __raw_readl(IPC_MSG_REG1);
 	a8_m3_data_r.reg2 = __raw_readl(IPC_MSG_REG2);
 	a8_m3_data_r.reg3 = __raw_readl(IPC_MSG_REG3);
@@ -70,7 +67,6 @@ void msg_read_all()
 }
 
 /* Read one specific IPC register */
-/* reg = 0..7 */
 void msg_read(char reg)
 {
 	ipc_reg_r = __raw_readl(IPC_MSG_REG1 + (0x4*reg));
@@ -78,7 +74,7 @@ void msg_read(char reg)
 }
 
 /* Write all the IPC registers in one-shot */
-void msg_write_all()
+void msg_write_all(void)
 {
 	__raw_writel(a8_m3_data_w.reg1, IPC_MSG_REG1);
 	__raw_writel(a8_m3_data_w.reg2, IPC_MSG_REG2);
@@ -91,30 +87,33 @@ void msg_write_all()
 	__raw_writel(a8_m3_data_w.reg8, IPC_MSG_REG8);
 }
 
-/* Write to one specific IPC register */
-/* Before calling this fn, make sure ipc_reg_w has to correct val */
-/* TODO: Should check for the reg no. as some are reserved? */
+/*
+ * Write to one specific IPC register
+ * Before calling this fn, make sure ipc_reg_w has the correct val
+ * TODO: Should check for the reg no. as some are reserved?
+ */
 void msg_write(char reg)
 {
 	__raw_writel(ipc_reg_w, IPC_MSG_REG1 + (0x4*reg));
 	__raw_writel(ipc_reg_w, (int)(&a8_m3_data_w) + (0x4*reg));
 }
 
-/* TODO: Is there a better place for the following? Should it be a separate file? */
-/* Check if the cmd_id is valid or not
+/*
+ * Check if the cmd_id is valid or not
  * return 1 on success, 0 on failure
  */
-int msg_cmd_is_valid()
+int msg_cmd_is_valid(void)
 {
 	int cmd_cnt = 0;
 
 	msg_read(STAT_ID_REG);
 
-	cmd_id = ipc_reg_r & 0xffff;	/* Extract the CMD_ID field of 16 bits */
+	/* Extract the CMD_ID field of 16 bits */
+	cmd_id = ipc_reg_r & 0xffff;
 
 	for(; cmd_cnt < sizeof(valid_cmd_id)/sizeof(short); cmd_cnt++) {
 		if(valid_cmd_id[cmd_cnt] == cmd_id)
-		return 1;
+			return 1;
 	}
 
 	return 0;
@@ -127,7 +126,8 @@ void msg_cmd_dispatcher()
 
 	msg_read_all();
 
-	if((a8_m3_data_r.reg3 == 0xffffffff) && (a8_m3_data_r.reg4 == 0xffffffff))
+	if ((a8_m3_data_r.reg3 == 0xffffffff) &&
+		(a8_m3_data_r.reg4 == 0xffffffff))
 		use_default_val = 1;
 
 	a8_m3_ds_data.reg1 = a8_m3_data_r.reg3;
@@ -164,7 +164,7 @@ void msg_cmd_dispatcher()
 	}
 }
 
-void m3_version()
+void m3_version(void)
 {
 	msg_read(STAT_ID_REG);
 	ipc_reg_r &= 0x0000ffff;
@@ -180,16 +180,17 @@ void msg_cmd_stat_update(int cmd_stat_value)
 	msg_write(STAT_ID_REG);
 }
 
-/* Check whether command needs a trigger or not
+/*
+ * Check whether command needs a trigger or not
  * returns 1 if trigger is needed
  * returns 0 if trigger is not needed (eg: checking the version)
  */
-int msg_cmd_needs_trigger()
+int msg_cmd_needs_trigger(void)
 {
 	msg_read(STAT_ID_REG);
 
 	/* Version and state machine reset commands do not need a trigger */
-	if((cmd_id == 0xf || cmd_id == 0xe))
+	if ((cmd_id == 0xf || cmd_id == 0xe))
 		return 0;
 	else
 		return 1;

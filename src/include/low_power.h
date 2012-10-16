@@ -77,22 +77,24 @@ struct deep_sleep_data {
 };
 
 int reg_mod(int, int, int);
-int debugss_keep_enabled();
+int debugss_keep_enabled(void);
 
 int module_state_change(int, int);
 int clkdm_state_change(int state, int reg);
-int interconnect_modules_enable();
-int interconnect_modules_disable();
-int misc_modules_disable();
-int essential_modules_disable();
-int essential_modules_enable();
-void mpu_disable();
-void mpu_enable();
-void clkdm_sleep();
-void clkdm_wake();
-void mpu_clkdm_sleep();
-void mpu_clkdm_wake();
+int interconnect_modules_enable(void);
+int interconnect_modules_disable(void);
+int essential_modules_disable(void);
+int essential_modules_enable(void);
+void mpu_disable(void);
+void mpu_enable(void);
+void clkdm_sleep(void);
+void clkdm_wake(void);
+void mpu_clkdm_sleep(void);
+void mpu_clkdm_wake(void);
+void wkup_clkdm_sleep(void);
+void wkup_clkdm_wake(void);
 int pd_state_change(int, int);
+void pd_state_restore(void);
 
 int mpu_ram_ret_state_change(int, int);
 int mpu_l1_ret_state_change(int, int);
@@ -112,14 +114,14 @@ int mpu_powerst_change(int, int);
 int get_pd_per_stctrl_val(int);
 int get_pd_mpu_stctrl_val(int);
 
-int verify_pd_transitions();
+int verify_pd_transitions(void);
 
-int disable_master_oscillator();
-int enable_master_oscillator();
+int disable_master_oscillator(void);
+int enable_master_oscillator(void);
 
 void configure_deepsleep_count(int ds_count);
 void configure_wake_sources(int wake_sources,int mod_check);
-void clear_wake_sources();
-void enable_wake_sources_for_ds2();
+void clear_wake_sources(void);
+void enable_wake_sources_for_ds2(void);
 
 #endif

@@ -33,14 +33,12 @@ void a8_m3_low_power_sync(int cmd_stat_value)
 	nvic_enable_irq(AM335X_IRQ_PRCM_M3_IRQ2);
 }
 
-
-void init_m3_state_machine()
+void init_m3_state_machine(void)
 {
 	int i = 0;
 
-	/* We init things again */
 	/* Flush out NVIC interrupts */
-	for(i=0; i<AM335X_NUM_EXT_INTERRUPTS; i++)
+	for (i=0; i<AM335X_NUM_EXT_INTERRUPTS; i++)
 	{
 		nvic_disable_irq(i);
 		nvic_clear_irq(i);
@@ -55,7 +53,8 @@ void init_m3_state_machine()
 	/* Enable only the MBX IRQ */
 	nvic_enable_irq(AM335X_IRQ_MBINT0);
 
-	/* In the remote case where we disabled the MPU CLOCK
+	/*
+	 * In the remote case where we disabled the MPU CLOCK
 	 * enable it again, no harm in writing to the reg
 	 * even if this was not needed
 	 */
@@ -64,7 +63,7 @@ void init_m3_state_machine()
 }
 
 /* Timer based sync scheme - Not required for now */
-void timer_sync()
+void timer_sync(void)
 {
 
 }

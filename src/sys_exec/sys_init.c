@@ -16,20 +16,22 @@
 #include <device_am335x.h>
 #include <system_am335.h>
 
-int am335_init()
+int am335_init(void)
 {
 	int i;
 
-	/* Each interrupt has a priority register associated with it
+	/*
+	 * Each interrupt has a priority register associated with it
 	 * 8 bits... only 7:6:5:4 are available for SA
 	 * out of the 16 levels here... using a priority grouping
-	 * these 4 bits can be further split into preempt priority and subpriority fields
+	 * these 4 bits can be further split into preempt priority
+	 * and subpriority fields
 	 */
 	scr_enable_sleepdeep();
 	scr_enable_sleeponexit();
 
 	/* Disable all the external interrupts */
-	for(i=0; i<AM335X_NUM_EXT_INTERRUPTS; i++)
+	for (i=0; i<AM335X_NUM_EXT_INTERRUPTS; i++)
 		nvic_disable_irq(i);
 
 	msg_init();
@@ -55,7 +57,8 @@ int main(void)
 {
 	system_init();	/* Setup Systick and global freq val */
 
-	/* need to configure bit 2 of System control register for sleepdeep
+	/*
+	 * need to configure bit 2 of System control register for sleepdeep
 	 * bit 1 of SCR will enable sleeponexit and this needs to be explored
 	 * bit 0 is reserved
 	 */

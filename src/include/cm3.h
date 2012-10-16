@@ -40,7 +40,7 @@
 void nvic_enable_irq(int);
 void nvic_disable_irq(int);
 void nvic_clear_irq(int);
-void scr_enable_sleepdeep();
-void scr_enable_sleeponexit();
+void scr_enable_sleepdeep(void);
+void scr_enable_sleeponexit(void);
 
 #endif

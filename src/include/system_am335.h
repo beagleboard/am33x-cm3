@@ -38,10 +38,8 @@ struct cmd_data {
 };
 
 struct cmd_data cmd_global_data;
-
 struct ipc_data a8_m3_data_r;
 struct ipc_data	a8_m3_data_w;
-
 struct ds_data	a8_m3_ds_data;
 
 int ipc_reg_r;
@@ -51,31 +49,29 @@ short cmd_id;
 short cmd_stat;
 
 int cmd_wake_sources;
-
 int pd_mpu_stctrl_next_val;
 int pd_mpu_stctrl_prev_val;
 int pd_per_stctrl_next_val;
 int pd_per_stctrl_prev_val;
-
 int pd_mpu_pwrstst_next_val;
 int pd_mpu_pwrstst_prev_val;
 int pd_per_pwrstst_next_val;
 int pd_per_pwrstst_prev_val;
 
-void pm_init();
+void pm_init(void);
 
-void system_init();
-void system_core_clock_update();
+void system_init(void);
+void system_core_clock_update(void);
 
-void msg_init();
-void msg_read(char reg);
-void msg_read_all();
-void msg_write(char reg);
-void msg_write_all();
+void msg_init(void);
+void msg_read(char);
+void msg_read_all(void);
+void msg_write(char);
+void msg_write_all(void);
 
-int msg_cmd_is_valid();
-int msg_cmd_needs_trigger();
-void msg_cmd_dispatcher();
+int msg_cmd_is_valid(void);
+int msg_cmd_needs_trigger(void);
+void msg_cmd_dispatcher(void);
 void msg_cmd_stat_update(int);
 
 void a8_notify(int);
@@ -86,25 +82,24 @@ void a8_lp_cmd2_handler(struct cmd_data *, char);
 void a8_lp_cmd3_handler(struct cmd_data *, char);
 void a8_lp_cmd5_handler(struct cmd_data *, char);
 void a8_lp_cmd7_handler(struct cmd_data *, char);
-void a8_standalone(struct cmd_data *);
+void a8_standalone_handler(struct cmd_data *);
 
 void generic_wake_handler(int);
-void a8_wake_cmd1_handler();
-void a8_wake_cmd2_handler();
-void a8_wake_cmd3_handler();
-void a8_wake_cmd5_handler();
-void a8_wake_cmd7_handler();
-void a8_standalone_handler();
+void a8_wake_cmd1_handler(void);
+void a8_wake_cmd2_handler(void);
+void a8_wake_cmd3_handler(void);
+void a8_wake_cmd5_handler(void);
+void a8_wake_cmd7_handler(void);
 
-void m3_version();
-void init_m3_state_machine();
+void m3_version(void);
+void init_m3_state_machine(void);
 
-void trace_init();
-void trace_update();
-void trace_get_current_pos();
-void trace_set_current_pos();
+void trace_init(void);
+void trace_update(void);
+void trace_get_current_pos(void);
+void trace_set_current_pos(void);
 
-int rtc_enable_check();
+int rtc_enable_check(void);
 int rtc_reg_read(int);
 void rtc_reg_write(int, int);
 

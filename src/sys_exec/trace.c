@@ -16,24 +16,24 @@
 #include <system_am335.h>
 
 /* TODO: ROM code ate up the trace location. Can we manage without this? */
-void trace_init()
+void trace_init(void)
 {
 
 }
 
-void trace_update()
+void trace_update(void)
 {
 
 }
 
 /* Use bit-banding here */
-void trace_get_current_pos()
+void trace_get_current_pos(void)
 {
 
 }
 
 /* Intended to be called in case of errors/exceptions */
-void trace_set_current_pos()
+void trace_set_current_pos(void)
 {
 
 }
