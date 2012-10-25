@@ -15,7 +15,7 @@
 
 #include <stdint.h>
 
-#define CM3_VERSION		0x11
+#define CM3_VERSION		0x12
 
 #define MOSC_OFF		0x0
 #define MOSC_ON			0x1
@@ -71,8 +71,8 @@ struct deep_sleep_data {
 	int wake_sources :13;			/* Wake sources */
 						/* USB, I2C0, RTC_ALARM, TIMER1 \
 						   UART0, GPIO0_WAKE0, GPIO0_WAKE1, \
-						   WDT1, ADTSC, RTC_TIMER, TIMER0, \
-						   MPU, WDT0, */
+						   WDT1, ADTSC, RTC_TIMER, USBWOUT0, \
+						   MPU, USBWOUT1 */
 	int reserved :1;			/* Internal use */
 };
 

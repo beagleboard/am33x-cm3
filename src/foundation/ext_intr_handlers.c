@@ -54,6 +54,7 @@ void extint31_handler()
 /* USBWAKEUP */
 void extint33_handler()
 {
+	nvic_disable_irq(AM335X_IRQ_USBWAKEUP);
 	generic_wake_handler(AM335X_IRQ_USBWAKEUP);
 }
 
@@ -71,6 +72,20 @@ void extint34_handler()
 
 	nvic_disable_irq(AM335X_IRQ_PRCM_M3_IRQ2);
 	msg_cmd_dispatcher();
+}
+
+/* USB0WOUT */
+void extint35_handler()
+{
+	nvic_disable_irq(AM335X_IRQ_USB0WOUT);
+	generic_wake_handler(AM335X_IRQ_USB0WOUT);
+}
+
+/* USB1WOUT */
+void extint36_handler()
+{
+	nvic_disable_irq(AM335X_IRQ_USB1WOUT);
+	generic_wake_handler(AM335X_IRQ_USB1WOUT);
 }
 
 /* I2C0_WAKE */

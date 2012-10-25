@@ -127,9 +127,9 @@ void rtc_reg_write(int, int);
 #define BB_ADTSC_WAKE		*((volatile int *)(BITBAND_SRAM(&cmd_wake_sources, 8)))
 /* Not used currently */
 #define BB_RTC_TIMER_WAKE	*((volatile int *)(BITBAND_SRAM(&cmd_wake_sources, 9)))
-#define BB_TIMER0_WAKE		*((volatile int *)(BITBAND_SRAM(&cmd_wake_sources, 10)))
+#define BB_USBWOUT0		*((volatile int *)(BITBAND_SRAM(&cmd_wake_sources, 10)))
 #define BB_MPU_WAKE		*((volatile int *)(BITBAND_SRAM(&cmd_wake_sources, 11)))
-#define BB_WDT0_WAKE		*((volatile int *)(BITBAND_SRAM(&cmd_wake_sources, 12)))
+#define BB_USBWOUT1		*((volatile int *)(BITBAND_SRAM(&cmd_wake_sources, 12)))
 
 #define PD_MPU	0x1
 #define PD_PER	0x2

@@ -860,6 +860,12 @@ void configure_wake_sources(int wake_sources, int mod_check)
 		nvic_enable_irq(AM335X_IRQ_WDT0_WAKE);
 	}
 #endif
+
+	if(BB_USBWOUT0)
+		nvic_enable_irq(AM335X_IRQ_USB0WOUT);
+
+	if(BB_USBWOUT1)
+		nvic_enable_irq(AM335X_IRQ_USB1WOUT);
 }
 
 void clear_wake_sources()
@@ -884,6 +890,8 @@ void clear_wake_sources()
 	nvic_disable_irq(AM335X_IRQ_WDT0_WAKE);
 	nvic_disable_irq(AM335X_IRQ_WDT1_WAKE);
 	nvic_disable_irq(AM335X_IRQ_ADC_TSC_WAKE);
+	nvic_disable_irq(AM335X_IRQ_USB0WOUT);
+	nvic_disable_irq(AM335X_IRQ_USB1WOUT);
 
 	/* TODO: Clear all the pending interrupts */
 
