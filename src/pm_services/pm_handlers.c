@@ -15,6 +15,7 @@
 #include <cm3.h>
 #include <device_am335x.h>
 #include <low_power.h>
+#include <prmam335x.h>
 #include <system_am335.h>
 
 /* Enter RTC mode */
@@ -128,6 +129,13 @@ void a8_lp_cmd3_handler(struct cmd_data *data, char use_default_val)
 
 	interconnect_modules_disable();
 
+	/* DPLL retention update for PG 2.0 */
+	if (get_am335x_soc_rev() == AM335X_REV_ES2_0) {
+		dpll_power_down(DPLL_DDR);
+		dpll_power_down(DPLL_DISP);
+		dpll_power_down(DPLL_PER);
+	}
+
 	mpu_clkdm_sleep();
 
 	clkdm_sleep();
@@ -180,6 +188,13 @@ void a8_lp_cmd5_handler(struct cmd_data *data, char use_default_val)
 	/* PER power domain state change */
 	pd_state_change(per_st, PD_PER);
 
+	/* DPLL retention update for PG 2.0 */
+	if(get_am335x_soc_rev() == AM335X_REV_ES2_0) {
+		dpll_power_down(DPLL_DDR);
+		dpll_power_down(DPLL_DISP);
+		dpll_power_down(DPLL_PER);
+	}
+
 	mpu_clkdm_sleep();
 
 	wkup_clkdm_sleep();
@@ -227,6 +242,13 @@ void a8_lp_cmd7_handler(struct cmd_data *data, char use_default_val)
 
 	/* PER power domain state change */
 	pd_state_change(per_st, PD_PER);
+
+	/* DPLL retention update for PG 2.0 */
+	if (get_am335x_soc_rev() == AM335X_REV_ES2_0) {
+		dpll_power_down(DPLL_DDR);
+		dpll_power_down(DPLL_DISP);
+		dpll_power_down(DPLL_PER);
+	}
 
 	wkup_clkdm_sleep();
 
@@ -320,6 +342,13 @@ void a8_wake_cmd3_handler(void)
 	wkup_clkdm_wake();
 
 	clkdm_wake();
+
+	/* DPLL retention update for PG 2.0 */
+	if (get_am335x_soc_rev() == AM335X_REV_ES2_0) {
+		dpll_power_up(DPLL_DDR);
+		dpll_power_up(DPLL_DISP);
+		dpll_power_up(DPLL_PER);
+	}
 
 	interconnect_modules_enable();
 

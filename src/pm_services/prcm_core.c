@@ -839,3 +839,182 @@ int verify_pd_transitions(void)
 	else
 		return CMD_STAT_FAIL;
 }
+
+/* New Power-down Sequence PG 2.0 */
+void dpll_power_down(unsigned int dpll)
+{
+	int dpll_reg, dpll_reg_val, dpll_pwr_sw_status_reg;
+	unsigned int sw_ctrl_dpll_bit, isoscan_bit, ret_bit, reset_bit, iso_bit;
+	unsigned int pgoodin_bit, ponin_bit;
+	unsigned int pgoodout_status_bit, ponout_status_bit;
+
+	switch (dpll) {
+	case DPLL_PER:
+		dpll_reg		= DPLL_PWR_SW_CTRL;
+		sw_ctrl_dpll_bit	= SW_CTRL_PER_DPLL;
+		isoscan_bit		= ISOSCAN_PER;
+		ret_bit			= RET_PER;
+		reset_bit		= RESET_PER;
+		iso_bit			= ISO_PER;
+		pgoodin_bit		= PGOODIN_PER;
+		ponin_bit		= PONIN_PER;
+		dpll_pwr_sw_status_reg	= DPLL_PWR_SW_STATUS;
+		pgoodout_status_bit	= PGOODOUT_PER_STATUS;
+		ponout_status_bit	= PONOUT_PER_STATUS;
+		break;
+	case DPLL_DISP:
+		dpll_reg		= DPLL_PWR_SW_CTRL;
+		sw_ctrl_dpll_bit	= SW_CTRL_DISP_DPLL;
+		isoscan_bit		= ISOSCAN_DISP;
+		ret_bit			= RET_DISP;
+		reset_bit		= RESET_DISP;
+		iso_bit			= ISO_DISP;
+		pgoodin_bit		= PGOODIN_DISP;
+		ponin_bit		= PONIN_DISP;
+		dpll_pwr_sw_status_reg	= DPLL_PWR_SW_STATUS;
+		pgoodout_status_bit	= PGOODOUT_DISP_STATUS;
+		ponout_status_bit	= PONOUT_DISP_STATUS;
+		break;
+	case DPLL_DDR:
+		dpll_reg		= DPLL_PWR_SW_CTRL;
+		sw_ctrl_dpll_bit	= SW_CTRL_DDR_DPLL;
+		isoscan_bit		= ISOSCAN_DDR;
+		ret_bit			= RET_DDR;
+		reset_bit		= RESET_DDR;
+		iso_bit			= ISO_DDR;
+		pgoodin_bit		= PGOODIN_DDR;
+		ponin_bit		= PONIN_DDR;
+		dpll_pwr_sw_status_reg	= DPLL_PWR_SW_STATUS;
+		pgoodout_status_bit	= PGOODOUT_DDR_STATUS;
+		ponout_status_bit	= PONOUT_DDR_STATUS;
+		break;
+	default:
+		return;
+	}
+
+	/* Configure bit to select Control module selection for DPLL */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val |= sw_ctrl_dpll_bit;
+	__raw_writel(dpll_reg_val, dpll_reg);
+
+	/* Assert ISO bit high */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val |= iso_bit;
+	__raw_writel(dpll_reg_val, dpll_reg);
+
+	/* ISO_SCAN, RET should be asserted high */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val |= (isoscan_bit | ret_bit);
+	__raw_writel(dpll_reg_val, dpll_reg);
+
+	/* Assert DPLL reset to 1 */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val |= reset_bit;
+	__raw_writel(dpll_reg_val, dpll_reg);
+
+	/* PGOODIN signal is de-asserted low */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val &= ~pgoodin_bit;
+	__raw_writel(dpll_reg_val, dpll_reg);
+
+	/* PONIN signal is de-asserted low */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val &= ~ponin_bit;
+	__raw_writel(dpll_reg_val, dpll_reg);
+
+	/* Poll for PONOUT and PGOODOUT signal status as 0 */
+	while (__raw_readl(dpll_pwr_sw_status_reg) &
+			(pgoodout_status_bit | ponout_status_bit)) {
+	}
+}
+
+/* New Power-up Sequence PG 2.0 */
+void dpll_power_up(unsigned int dpll)
+{
+	int dpll_reg, dpll_reg_val, dpll_pwr_sw_status_reg;
+	unsigned int sw_ctrl_dpll_bit, isoscan_bit, ret_bit, reset_bit, iso_bit;
+	unsigned int pgoodin_bit, ponin_bit;
+	unsigned int pgoodout_status_bit, ponout_status_bit;
+
+	switch (dpll) {
+	case DPLL_PER:
+		dpll_reg		= DPLL_PWR_SW_CTRL;
+		sw_ctrl_dpll_bit	= SW_CTRL_PER_DPLL;
+		isoscan_bit		= ISOSCAN_PER;
+		ret_bit			= RET_PER;
+		reset_bit		= RESET_PER;
+		iso_bit			= ISO_PER;
+		pgoodin_bit		= PGOODIN_PER;
+		ponin_bit		= PONIN_PER;
+		dpll_pwr_sw_status_reg	= DPLL_PWR_SW_STATUS;
+		pgoodout_status_bit	= PGOODOUT_PER_STATUS;
+		ponout_status_bit	= PONOUT_PER_STATUS;
+		break;
+	case DPLL_DISP:
+		dpll_reg		= DPLL_PWR_SW_CTRL;
+		sw_ctrl_dpll_bit	= SW_CTRL_DISP_DPLL;
+		isoscan_bit		= ISOSCAN_DISP;
+		ret_bit			= RET_DISP;
+		reset_bit		= RESET_DISP;
+		iso_bit			= ISO_DISP;
+		pgoodin_bit		= PGOODIN_DISP;
+		ponin_bit		= PONIN_DISP;
+		dpll_pwr_sw_status_reg	= DPLL_PWR_SW_STATUS;
+		pgoodout_status_bit	= PGOODOUT_DISP_STATUS;
+		ponout_status_bit	= PONOUT_DISP_STATUS;
+		break;
+	case DPLL_DDR:
+		dpll_reg		= DPLL_PWR_SW_CTRL;
+		sw_ctrl_dpll_bit	= SW_CTRL_DDR_DPLL;
+		isoscan_bit		= ISOSCAN_DDR;
+		ret_bit			= RET_DDR;
+		reset_bit		= RESET_DDR;
+		iso_bit			= ISO_DDR;
+		pgoodin_bit		= PGOODIN_DDR;
+		ponin_bit		= PONIN_DDR;
+		dpll_pwr_sw_status_reg	= DPLL_PWR_SW_STATUS;
+		pgoodout_status_bit	= PGOODOUT_DDR_STATUS;
+		ponout_status_bit	= PONOUT_DDR_STATUS;
+		break;
+	default:
+		return;
+	}
+
+	/* PONIN is asserted high */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val |= ponin_bit;
+	__raw_writel(dpll_reg_val, dpll_reg);
+
+	/* Poll for PONOUT to become high  */
+	while (!(__raw_readl(dpll_pwr_sw_status_reg) & ponout_status_bit)) {
+	}
+
+	/* PGOODIN is asserted high */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val |= pgoodin_bit;
+	__raw_writel(dpll_reg_val, dpll_reg);
+
+	/* Poll for PGOODOUT to become high */
+	while (!(__raw_readl(dpll_pwr_sw_status_reg) & pgoodout_status_bit)) {
+	}
+
+	/* De-assert DPLL RESET to 0 */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val &= ~reset_bit;
+	__raw_writel(dpll_reg_val, dpll_reg);
+
+	/* ISO_SCAN, RET should be de-asserted low */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val &= ~(isoscan_bit | ret_bit);
+	__raw_writel(dpll_reg_val, dpll_reg);
+
+	/* De-assert ISO signal */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val &= ~iso_bit;
+	__raw_writel(dpll_reg_val, dpll_reg);
+
+	/* Re-Configure bit to select PRCM selection for DPLL */
+	dpll_reg_val = __raw_readl(dpll_reg);
+	dpll_reg_val &= ~sw_ctrl_dpll_bit;
+	__raw_writel(dpll_reg_val, dpll_reg);
+}

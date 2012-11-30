@@ -15,7 +15,7 @@
 
 #include <stdint.h>
 
-#define CM3_VERSION		0x13
+#define CM3_VERSION		0x14
 
 #define MOSC_OFF		0x0
 #define MOSC_ON			0x1
@@ -123,5 +123,8 @@ void configure_deepsleep_count(int ds_count);
 void configure_wake_sources(int wake_sources,int mod_check);
 void clear_wake_sources(void);
 void enable_wake_sources_for_ds2(void);
+
+void dpll_power_down(unsigned int dpll);
+void dpll_power_up(unsigned int dpll);
 
 #endif

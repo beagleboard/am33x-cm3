@@ -150,6 +150,45 @@
 
 #define DEVICE_ID	(CONTROL_BASE + 0x0600)
 
+#define DPLL_PWR_SW_STATUS	(CONTROL_BASE + 0x050C)
+#define DPLL_PWR_SW_CTRL	(CONTROL_BASE + 0x1318)
+
+/* DPLL */
+#define DPLL_PER		0
+#define DPLL_DISP		1
+#define DPLL_DDR		2
+
+/* DPLL_PWR_SW_STATUS bit fields: */
+#define PGOODOUT_DDR_STATUS	(1 << 25)
+#define PONOUT_DDR_STATUS	(1 << 24)
+#define PGOODOUT_DISP_STATUS	(1 << 17)
+#define PONOUT_DISP_STATUS	(1 << 16)
+#define PGOODOUT_PER_STATUS	(1 << 9)
+#define PONOUT_PER_STATUS	(1 << 8)
+
+/* DPLL_PWR_SW_CTRL bit fields: */
+#define SW_CTRL_DDR_DPLL	(1 << 31)
+#define ISOSCAN_DDR		(1 << 29)
+#define RET_DDR			(1 << 28)
+#define RESET_DDR		(1 << 27)
+#define ISO_DDR			(1 << 26)
+#define PGOODIN_DDR		(1 << 25)
+#define PONIN_DDR		(1 << 24)
+#define SW_CTRL_DISP_DPLL	(1 << 23)
+#define ISOSCAN_DISP		(1 << 21)
+#define RET_DISP		(1 << 20)
+#define RESET_DISP		(1 << 19)
+#define ISO_DISP		(1 << 18)
+#define PGOODIN_DISP		(1 << 17)
+#define PONIN_DISP		(1 << 16)
+#define SW_CTRL_PER_DPLL	(1 << 15)
+#define ISOSCAN_PER		(1 << 13)
+#define RET_PER			(1 << 12)
+#define RESET_PER		(1 << 11)
+#define ISO_PER			(1 << 10)
+#define PGOODIN_PER		(1 << 9)
+#define PONIN_PER		(1 << 8)
+
 #define __raw_readl(a)		(*(volatile int *)(a))
 #define __raw_writel(v, a)	(*(volatile int *)(a) = v)
 
