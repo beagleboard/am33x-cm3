@@ -419,8 +419,8 @@ void a8_wake_cmd7_handler(void)
 
 	msg_cmd_stat_update(result);
 
-	/* For A8 to get the module interrupt, the clock needs to be ungated */
-	enable_wake_sources_for_ds2();
+	/* Interrupt MPU now */
+	__asm("sev");
 
 	clear_wake_sources();
 }

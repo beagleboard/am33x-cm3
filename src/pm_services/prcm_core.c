@@ -624,39 +624,6 @@ static int check_wdt(int base)
 	return 0;
 }
 
-
-/* For the interrupt to go to A8, the module should be enabled */
-void enable_wake_sources_for_ds2()
-{
-	/* Enable wakeup interrupts from required wake sources */
-	if (BB_USB_WAKE)
-		module_state_change(MODULE_ENABLE, AM335X_CM_PER_USB0_CLKCTRL);
-
-	if (BB_I2C0_WAKE)
-		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_I2C0_CLKCTRL);
-
-	if (BB_ADTSC_WAKE)
-		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_ADC_TSC_CLKCTRL);
-
-	if(BB_UART0_WAKE)
-		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_UART0_CLKCTRL);
-
-	if(BB_GPIO0_WAKE0)
-		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_GPIO0_CLKCTRL);
-
-	if(BB_GPIO0_WAKE1)
-		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_GPIO0_CLKCTRL);
-
-	if(BB_RTC_ALARM_WAKE)
-		module_state_change(MODULE_ENABLE, AM335X_CM_RTC_RTC_CLKCTRL);
-
-	if(BB_TIMER1_WAKE)
-		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_TIMER1_CLKCTRL);
-
-	if(BB_WDT1_WAKE)
-		module_state_change(MODULE_ENABLE, AM335X_CM_WKUP_WDT1_CLKCTRL);
-}
-
 /*
  * A8 is expected to have left the module in a state where it will
  * cause a wakeup event. Ideally, this function should just enable
