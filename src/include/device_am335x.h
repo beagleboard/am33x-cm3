@@ -148,6 +148,8 @@
 
 #define DEEPSLEEP_CTRL	(CONTROL_BASE + 0x0470)
 
+#define DEVICE_ID	(CONTROL_BASE + 0x0600)
+
 #define __raw_readl(a)		(*(volatile int *)(a))
 #define __raw_writel(v, a)	(*(volatile int *)(a) = v)
 

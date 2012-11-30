@@ -108,6 +108,16 @@ void pm_init(void)
 	pd_per_pwrstst_prev_val	= 0;
 }
 
+void setup_am335x_soc_revision(void)
+{
+	am335x_soc_rev = (__raw_readl(DEVICE_ID) >> 0x1c) & 0xff;
+}
+
+unsigned int get_am335x_soc_rev(void)
+{
+	return am335x_soc_rev;
+}
+
 int var_mod(int var, int mask, int bit_val)
 {
 	int v;
