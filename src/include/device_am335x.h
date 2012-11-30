@@ -152,6 +152,7 @@
 
 #define DPLL_PWR_SW_STATUS	(CONTROL_BASE + 0x050C)
 #define DPLL_PWR_SW_CTRL	(CONTROL_BASE + 0x1318)
+#define SMA2_SPARE_REG		(CONTROL_BASE + 0x1320)
 
 /* DPLL */
 #define DPLL_PER		0
@@ -188,6 +189,9 @@
 #define ISO_PER			(1 << 10)
 #define PGOODIN_PER		(1 << 9)
 #define PONIN_PER		(1 << 8)
+
+/* SMA2_SPARE_REG bit fields: */
+#define VSLDO_CORE_AUTO_RAMP_EN	(1 << 1)
 
 #define __raw_readl(a)		(*(volatile int *)(a))
 #define __raw_writel(v, a)	(*(volatile int *)(a) = v)

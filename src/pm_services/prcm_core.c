@@ -1018,3 +1018,31 @@ void dpll_power_up(unsigned int dpll)
 	dpll_reg_val &= ~sw_ctrl_dpll_bit;
 	__raw_writel(dpll_reg_val, dpll_reg);
 }
+
+void core_ldo_power_down(void)
+{
+	unsigned int core_ldo;
+
+	/* Configure RETMODE_ENABLE for CORE LDO */
+	core_ldo = __raw_readl(AM335X_PRM_LDO_SRAM_CORE_CTRL);
+	core_ldo |= RETMODE_ENABLE;
+	__raw_writel(core_ldo, AM335X_PRM_LDO_SRAM_CORE_CTRL);
+
+	/* Poll for LDO Status to be in retention (SRAMLDO_STATUS) */
+	while (!(__raw_readl(AM335X_PRM_LDO_SRAM_CORE_CTRL) & SRAMLDO_STATUS)) {
+	}
+}
+
+void core_ldo_power_up(void)
+{
+	unsigned int core_ldo;
+
+	/* Disable RETMODE for CORE LDO */
+	core_ldo = __raw_readl(AM335X_PRM_LDO_SRAM_CORE_CTRL);
+	core_ldo &= ~RETMODE_ENABLE;
+	__raw_writel(core_ldo, AM335X_PRM_LDO_SRAM_CORE_CTRL);
+
+	/* Poll for LDO status to be out of retention (SRAMLDO_STATUS) */
+	while (__raw_readl(AM335X_PRM_LDO_SRAM_CORE_CTRL) & SRAMLDO_STATUS) {
+	}
+}

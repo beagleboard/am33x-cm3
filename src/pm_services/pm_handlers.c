@@ -91,15 +91,12 @@ void a8_lp_cmd3_handler(struct cmd_data *data, char use_default_val)
 
 	int per_st = 0;
 	int mpu_st = 0;
-
-	/* Disable MOSC if defaults are required or if user asked for it */
-	if (use_default_val || !(local_cmd->mosc_state))
-		disable_master_oscillator();
+	int temp;
 
 	configure_wake_sources(local_cmd->wake_sources, use_default_val);
 
 	/* TODO: Check for valid range */
-	if(!(use_default_val) && (local_cmd->deepsleep_count))
+	if (!(use_default_val) && (local_cmd->deepsleep_count))
 		configure_deepsleep_count(local_cmd->deepsleep_count);
 	else
 		configure_deepsleep_count(DS_COUNT_DEFAULT);
@@ -140,9 +137,24 @@ void a8_lp_cmd3_handler(struct cmd_data *data, char use_default_val)
 
 	clkdm_sleep();
 
-	wkup_clkdm_sleep();
+	/* Disable MOSC if defaults are required or if user asked for it */
+	if (use_default_val || !(local_cmd->mosc_state)) {
+		disable_master_oscillator();
+		/* Core LDO retention for PG 2.0 if PD_PER is in RET */
+		if (get_am335x_soc_rev() == AM335X_REV_ES2_0) {
+			if ((__raw_readl(AM335X_PM_PER_PWRSTST) &
+				PWR_STATE_STS_MASK) == POWER_STATE_STS_RET) {
+				/* set Auto_RAMP_EN in SMA2 Spare Register (SMA2). */
+				temp = __raw_readl(SMA2_SPARE_REG);
+				temp |= VSLDO_CORE_AUTO_RAMP_EN;
+				__raw_writel(temp, SMA2_SPARE_REG);
+				core_ldo_power_down();
+			}
+		}
+	}
 
 	/* TODO: wait for power domain state change interrupt from PRCM */
+	wkup_clkdm_sleep();
 }
 
 /*
@@ -334,6 +346,9 @@ void a8_wake_cmd2_handler(void)
 void a8_wake_cmd3_handler(void)
 {
 	int result = 0;
+
+	if (get_am335x_soc_rev() == AM335X_REV_ES2_0)
+		core_ldo_power_up();
 
 	result = verify_pd_transitions();
 
