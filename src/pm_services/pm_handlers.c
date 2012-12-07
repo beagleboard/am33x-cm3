@@ -392,6 +392,13 @@ void a8_wake_cmd5_handler(void)
 
 	wkup_clkdm_wake();
 
+	/* DPLL retention update for PG 2.0 */
+	if (get_am335x_soc_rev() == AM335X_REV_ES2_0) {
+		dpll_power_up(DPLL_DDR);
+		dpll_power_up(DPLL_DISP);
+		dpll_power_up(DPLL_PER);
+	}
+
 	essential_modules_enable();
 
 	msg_cmd_stat_update(result);
@@ -416,6 +423,13 @@ void a8_wake_cmd7_handler(void)
 	pd_state_restore();
 
 	wkup_clkdm_wake();
+
+	/* DPLL retention update for PG 2.0 */
+	if (get_am335x_soc_rev() == AM335X_REV_ES2_0) {
+		dpll_power_up(DPLL_DDR);
+		dpll_power_up(DPLL_DISP);
+		dpll_power_up(DPLL_PER);
+	}
 
 	msg_cmd_stat_update(result);
 
