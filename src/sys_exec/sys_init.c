@@ -45,6 +45,8 @@ int am335_init(void)
 	/* Enable only the MBX IRQ */
 	nvic_enable_irq(AM335X_IRQ_MBINT0);
 
+	m3_firmware_version();
+
 	/* TODO: Enable PRCM_INT2 with a dummy handler */
 
 	/* Notify A8 of init completion */

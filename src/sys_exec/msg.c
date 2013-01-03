@@ -160,16 +160,16 @@ void msg_cmd_dispatcher()
 		break;
 	case 0xf:
 	default:
-		m3_version();
+		m3_firmware_version();
 	}
 }
 
-void m3_version(void)
+void m3_firmware_version(void)
 {
-	msg_read(STAT_ID_REG);
-	ipc_reg_r &= 0x0000ffff;
-	ipc_reg_w = (ipc_reg_r | CM3_VERSION << 16);
-	msg_write(STAT_ID_REG);
+	msg_read(PARAM1_REG);
+	ipc_reg_r &= 0xffff0000;
+	ipc_reg_w = ipc_reg_r | CM3_VERSION;
+	msg_write(PARAM1_REG);
 }
 
 void msg_cmd_stat_update(int cmd_stat_value)

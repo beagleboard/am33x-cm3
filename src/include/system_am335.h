@@ -93,7 +93,7 @@ void a8_wake_cmd3_handler(void);
 void a8_wake_cmd5_handler(void);
 void a8_wake_cmd7_handler(void);
 
-void m3_version(void);
+void m3_firmware_version(void);
 void init_m3_state_machine(void);
 
 void trace_init(void);
