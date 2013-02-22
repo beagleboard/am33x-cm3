@@ -152,7 +152,8 @@ void extint47_handler()
 /* MPU_WAKE */
 void extint48_handler()
 {
-	while(1);
+	nvic_disable_irq(AM335X_IRQ_MPU_WAKE);
+	generic_wake_handler(AM335X_IRQ_MPU_WAKE);
 }
 
 /* WDT0_WAKE */

@@ -23,6 +23,7 @@ short valid_cmd_id[] = {
 	0x5,	/* DS1 */
 	0x7,	/* DS2 */
 	0x9,	/* Standalone app */
+	0xb,	/* Standby */
 	0xe,	/* Reset State Machine */
 	0xf,	/* Version */
 };
@@ -154,6 +155,9 @@ void msg_cmd_dispatcher()
 		break;
 	case 0x9:
 		a8_standalone_handler(&cmd_global_data);
+		break;
+	case 0xb:
+		a8_standby_handler(&cmd_global_data, use_default_val);	/* Standby */
 		break;
 	case 0xe:
 		init_m3_state_machine();	/* Reset M3 state machine */
