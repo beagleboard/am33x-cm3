@@ -107,12 +107,22 @@ void a8_lp_cmd3_handler(struct cmd_data *data, char use_default_val)
 	/* VDD MPU lowering does not make sense here so ignore that field */
 
 	if (!use_default_val) {
-		mpu_ram_ret_state_change(local_cmd->pd_mpu_ram_ret_state, mpu_st);
-		mpu_l1_ret_state_change(local_cmd->pd_mpu_l1_ret_state, mpu_st);
-		mpu_l2_ret_state_change(local_cmd->pd_mpu_l2_ret_state, mpu_st);
-		icss_mem_ret_state_change(local_cmd->pd_per_icss_mem_ret_state, per_st);
-		per_mem_ret_state_change(local_cmd->pd_per_mem_ret_state, per_st);
-		ocmc_mem_ret_state_change(local_cmd->pd_per_ocmc_ret_state, per_st);
+		mpu_st = mpu_powerst_change
+				(local_cmd->pd_mpu_state, mpu_st);
+		mpu_st = mpu_ram_ret_state_change
+				(local_cmd->pd_mpu_ram_ret_state, mpu_st);
+		mpu_st = mpu_l1_ret_state_change
+				(local_cmd->pd_mpu_l1_ret_state, mpu_st);
+		mpu_st = mpu_l2_ret_state_change
+				(local_cmd->pd_mpu_l2_ret_state, mpu_st);
+		per_st = per_powerst_change
+				(local_cmd->pd_per_state, per_st);
+		per_st = icss_mem_ret_state_change
+				(local_cmd->pd_per_icss_mem_ret_state, per_st);
+		per_st = per_mem_ret_state_change
+				(local_cmd->pd_per_mem_ret_state, per_st);
+		per_st = ocmc_mem_ret_state_change
+				(local_cmd->pd_per_ocmc_ret_state, per_st);
 	}
 
 	/* MPU power domain state change */
@@ -186,12 +196,22 @@ void a8_lp_cmd5_handler(struct cmd_data *data, char use_default_val)
 	mpu_st = get_pd_mpu_stctrl_val(1);
 
 	if (!use_default_val) {
-		mpu_ram_ret_state_change(local_cmd->pd_mpu_ram_ret_state, mpu_st);
-		mpu_l1_ret_state_change(local_cmd->pd_mpu_l1_ret_state, mpu_st);
-		mpu_l2_ret_state_change(local_cmd->pd_mpu_l2_ret_state, mpu_st);
-		icss_mem_on_state_change(local_cmd->pd_per_icss_mem_on_state, per_st);
-		per_mem_on_state_change(local_cmd->pd_per_mem_on_state, per_st);
-		ocmc_mem_on_state_change(local_cmd->pd_per_ocmc_on_state, per_st);
+		mpu_st = mpu_powerst_change
+				(local_cmd->pd_mpu_state, mpu_st);
+		mpu_st = mpu_ram_ret_state_change
+				(local_cmd->pd_mpu_ram_ret_state, mpu_st);
+		mpu_st = mpu_l1_ret_state_change
+				(local_cmd->pd_mpu_l1_ret_state, mpu_st);
+		mpu_st = mpu_l2_ret_state_change
+				(local_cmd->pd_mpu_l2_ret_state, mpu_st);
+		per_st = per_powerst_change
+				(local_cmd->pd_per_state, per_st);
+		per_st = icss_mem_on_state_change
+				(local_cmd->pd_per_icss_mem_on_state, per_st);
+		per_st = per_mem_on_state_change
+				(local_cmd->pd_per_mem_on_state, per_st);
+		per_st = ocmc_mem_on_state_change
+				(local_cmd->pd_per_ocmc_on_state, per_st);
 	}
 
 	/* MPU power domain state change */
@@ -243,10 +263,18 @@ void a8_lp_cmd7_handler(struct cmd_data *data, char use_default_val)
 	mpu_st = get_pd_mpu_stctrl_val(2);
 
 	if (!use_default_val) {
-		mpu_ram_on_state_change(local_cmd->pd_mpu_ram_on_state, mpu_st);
-		icss_mem_on_state_change(local_cmd->pd_per_icss_mem_on_state, per_st);
-		per_mem_on_state_change(local_cmd->pd_per_mem_on_state, per_st);
-		ocmc_mem_on_state_change(local_cmd->pd_per_ocmc_on_state, per_st);
+		mpu_st = mpu_powerst_change
+				(local_cmd->pd_mpu_state, mpu_st);
+		mpu_st = mpu_ram_on_state_change
+				(local_cmd->pd_mpu_ram_on_state, mpu_st);
+		per_st = per_powerst_change
+				(local_cmd->pd_per_state, per_st);
+		per_st = icss_mem_on_state_change
+				(local_cmd->pd_per_icss_mem_on_state, per_st);
+		per_st = per_mem_on_state_change
+				(local_cmd->pd_per_mem_on_state, per_st);
+		per_st = ocmc_mem_on_state_change
+				(local_cmd->pd_per_ocmc_on_state, per_st);
 	}
 
 	/* MPU power domain state change */
@@ -295,6 +323,17 @@ void a8_standby_handler(struct cmd_data *data, char use_default_val)
 	 */
 	per_st = get_pd_per_stctrl_val(3);
 	mpu_st = get_pd_mpu_stctrl_val(3);
+
+	if (!use_default_val) {
+		mpu_st = mpu_powerst_change
+				(local_cmd->pd_mpu_state, mpu_st);
+		mpu_st = mpu_ram_ret_state_change
+				(local_cmd->pd_mpu_ram_ret_state, mpu_st);
+		mpu_st = mpu_l1_ret_state_change
+				(local_cmd->pd_mpu_l1_ret_state, mpu_st);
+		mpu_st = mpu_l2_ret_state_change
+				(local_cmd->pd_mpu_l2_ret_state, mpu_st);
+	}
 
 	/* MPU power domain state change */
 	pd_state_change(mpu_st, PD_MPU);
