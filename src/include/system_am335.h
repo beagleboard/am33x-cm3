@@ -163,5 +163,6 @@ unsigned int get_am335x_soc_rev(void);
 
 #define AM335X_REV_ES1_0	0
 #define AM335X_REV_ES2_0	1
+#define AM335X_REV_ES2_1	2
 
 #endif
