@@ -15,7 +15,7 @@
 
 #include <stdint.h>
 
-#define CM3_VERSION		0x18
+#define CM3_VERSION		0x181
 
 #define MOSC_OFF		0x0
 #define MOSC_ON			0x1
