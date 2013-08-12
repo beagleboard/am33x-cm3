@@ -344,6 +344,15 @@ void a8_standby_handler(struct cmd_data *data, char use_default_val)
 	mpu_clkdm_sleep();
 }
 
+void a8_cpuidle_handler(struct cmd_data *data, char use_default_val)
+{
+	struct deep_sleep_data *local_cmd = (struct deep_sleep_data *)data->data;
+
+	configure_standby_wake_sources(local_cmd->wake_sources, use_default_val);
+
+	mpu_clkdm_sleep();
+}
+
 /* Standalone application handler */
 void a8_standalone_handler(struct cmd_data *data)
 {
@@ -376,6 +385,9 @@ void generic_wake_handler(int wakeup_reason)
 		break;
 	case 0xb:
 		a8_wake_cmdb_handler();	/* Standby */
+		break;
+	case 0x10:
+		a8_wake_cmd10_handler();	/* cpuidle wake up */
 		break;
 	case 0xff:
 	default:
@@ -539,4 +551,16 @@ void a8_wake_cmdb_handler()
 	clear_wake_sources();
 
 	mpu_clkdm_wake();
+}
+
+/* Exit cpuidle
+ * MPU_MPU_CLKCTRL = OFF
+ */
+void a8_wake_cmd10_handler()
+{
+	clear_wake_sources();
+
+	mpu_clkdm_wake();
+
+	return;
 }

@@ -26,6 +26,7 @@ short valid_cmd_id[] = {
 	0xb,	/* Standby */
 	0xe,	/* Reset State Machine */
 	0xf,	/* Version */
+	0x10,	/* CPUIdle MPU Clock gating*/
 };
 
 /* Clear out the IPC regs */
@@ -161,6 +162,9 @@ void msg_cmd_dispatcher()
 		break;
 	case 0xe:
 		init_m3_state_machine();	/* Reset M3 state machine */
+		break;
+	case 0x10:
+		a8_cpuidle_handler(&cmd_global_data, use_default_val);	/* cpuidle MPU Clock gating */
 		break;
 	case 0xf:
 	default:
