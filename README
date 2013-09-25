@@ -1,3 +1,5 @@
+Source: http://arago-project.org/git/projects/?p=am33x-cm3.git;a=summary
+
 This is the README for the Cortex-M3 (CM3) firmware for power management
 on Texas Instruments' AM33XX series of SoCs.
 
